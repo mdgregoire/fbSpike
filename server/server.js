@@ -2,6 +2,22 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+var https = require('https')
+var pem = require('pem')
+
+pem.createCertificate({ days: 1, selfSigned: true }, function (err, keys) {
+  if (err) {
+    throw err
+  }
+  // var app = express()
+
+  // app.get('/', function (req, res) {
+  //   res.send('o hai!')
+  // })
+  app.use(express.static('server'));
+
+  https.createServer({ key: keys.serviceKey, cert: keys.certificate }, app).listen(4430)
+})
 
 console.log('in server');
 
@@ -16,8 +32,8 @@ console.log('in server');
 // const choreRouter = require('./routes/chore.router')
 
 // Body parser middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({extended: true}));
 
 // Passport Session Configuration
 // app.use(sessionConfig);
@@ -34,11 +50,10 @@ app.use(bodyParser.urlencoded({extended: true}));
 // app.use('/chore', choreRouter);
 
 // Serve static files
-app.use(express.static('server'));
 
-const PORT = process.env.PORT || 5000;
+// const PORT = process.env.PORT || 5000;
 
 /** Listen * */
-app.listen(PORT, () => {
-    console.log(`Listening on port: ${PORT}`);
-});
+// app.listen(PORT, () => {
+//     console.log(`Listening on port: ${PORT}`);
+// });
