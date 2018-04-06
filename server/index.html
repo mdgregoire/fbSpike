@@ -79,11 +79,14 @@
     console.log('Welcome!  Fetching your information.... ');
     FB.api('/me', function(response) {
       console.log('Successful login for: ' + response.name);
+      console.log('testapi response', response);
+      console.log('response.id', response.id);
       document.getElementById('status').innerHTML =
         'Thanks for logging in, ' + response.name + '!';
     });
   }
 </script>
+
 
 <!--
   Below we include the Login Button social plugin. This button uses
@@ -94,8 +97,25 @@
 <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
 </fb:login-button>
 
+<script>
+function fbLogout() {
+        FB.logout(function (response) {
+            //Do what ever you want here when logged out like reloading the page
+            window.location.reload();
+        });
+    }
+</script>
+
+<span id="fbLogout" onclick="fbLogout()"><a class="fb_button fb_button_medium"><span class="fb_button_text">Logout</span></a></span>
+<img src="https://graph.facebook.com/4/picture"/>
+
+
+<!-- <fb:login-button autologoutlink="true"></fb:login-button> -->
+
+
 <div id="status">
 </div>
+
 
 
   </body>
