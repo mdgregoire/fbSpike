@@ -3,6 +3,8 @@ console.log('in facebook controller');
 let self = this;
 
 self.picture = {url:''};
+self.user = FacebookService.user;
+self.addUserToDB = FacebookService.addUserToDB;
 
 // This is called with the results from from FB.getLoginStatus().
 statusChangeCallback = function(response) {
@@ -13,7 +15,7 @@ statusChangeCallback = function(response) {
   // for FB.getLoginStatus().
   if (response.status === 'connected') {
     // Logged into your app and Facebook.
-  testAPI()
+  testAPI(self.user)
   } else {
     // The person is not logged into your app or we are unable to tell.
     document.getElementById('status').innerHTML = 'Please log ' +
@@ -68,7 +70,7 @@ $window.fbAsyncInit = function() {
 
 // Here we run a very simple test of the Graph API after login is
 // successful.  See statusChangeCallback() for when this call is made.
- testAPI=function() {
+ testAPI=function(user) {
   console.log('Welcome!  Fetching your information.... ');
   FB.api('/me', function(response) {
     console.log('Successful login for: ' + response.name);
@@ -76,6 +78,12 @@ $window.fbAsyncInit = function() {
       'Thanks for logging in, ' + response.name + '!';
     document.getElementById('pic').innerHTML =
       `<img src=https://graph.facebook.com/${response.id}/picture/>`;
+      self.user.url = `https://graph.facebook.com/${response.id}/picture`
+      self.user.name = response.name;
+      self.user.fbid = response.id;
+      console.log(self.user, 'user in controller');
+      self.addUserToDB(self.user);
+
   });
 }
 }])//end controller
